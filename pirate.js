@@ -8,7 +8,8 @@ function Ship(id, name) {
     this.crewcap = 0
     this.cargoworth = 0;
     this.loot = [];
-    this.captain = {}
+    this.captain = {};
+    this.crew = [];
 }
 
 function Seafarer(id, name) {
@@ -17,19 +18,24 @@ function Seafarer(id, name) {
     this.ship = 0;
     this.maxhp = 15;
 }
+Seafarer.prototype.setShipId = function (id) {
+    this.ship = id;
+    return id;
+}
 
 function Pirate(id, name) {
-    Seafarer.call(this, id, name, shipid);
+    Seafarer.call(this, id, name);
     this.money = 0;
     this.thirst = 0;
     this.maxhp = 25;
     this.attackstr = 2;
+    this.greed = 2000;
 }
 
 Pirate.prototype = Object.create(Seafarer.prototype);
 
 function PirateCaptain(id, name) {
-    Pirate.call(this,id, name, shipid);
+    Pirate.call(this,id, name);
     this.maxhp = 25 + (Math.random() * 25);
     this.attackstr = 2 + (Math.random() * 15);
     this.loot = [];
@@ -37,23 +43,58 @@ function PirateCaptain(id, name) {
 PirateCaptain.prototype = Object.create(Pirate.prototype);
 
 
-ATavern.activeCargoShips = [];
+//ATavern.activeCargoShips = [];
+//TODO make this part of the objects.
+ATavern.nextPirateId = 1;
+ATavern.getNextPirateId = function () {
+    ATavern.nextPirateId++;
+    return ATavern.nextPirateId;
+}
 
-ATavern.nextCaptId = 1
+ATavern.nextSeafarerId = 1;
+ATavern.getNextSeafarerId = function () {
+    ATavern.nextSeafarerId++;
+    return ATavern.nextSeafarerId;
+}
+
+ATavern.nextShipId = 1;
+ATavern.getNextShipId = function () {
+    ATavern.nextShipId++;
+    return ATavern.nextShipId;
+}
+
 ATavern.makeNewMerchantCaptain = function(name){
-    var tCapt = new Seafarer(ATavern.nextCaptId ,name);
-    ATavern.nextCaptId++;
+    var tCapt = new Seafarer(ATavern.getNextSeafarerId(),name);
     tCapt.maxhp = 25 + (Math.random() * 25);
     return tCapt;
 }
 
-ATavern.nextShipId = 1
 ATavern.makeCargoship = function(captain, worth, loot) {
-    var tShip = new Ship(ATavern.nextShipId, "Freighter One");
-    ATavern.nextShipId++;
+    var tShip = new Ship(ATavern.getNextShipId(), "Freighter One");
+    captain.setShipId(tShip.id);
     tShip.captain = captain;
     tShip.worth = worth;
     tShip.loot.push(loot);
+    tShip.crewcap = 10 + (Math.random() * 25);
+    for( var i = 0; i < tShip.crewcap; i++){
+        var sm = new Seafarer(ATavern.getNextSeafarerId(), "John Doe");
+        sm.setShipId(tShip.id);
+        tShip.crew.push(sm);
+    }
+    return tShip;
+}
+
+
+ATavern.makeRandomPirateShip = function() {
+    var tShip = new Ship(ATavern.getNextShipId(), "Serenity");
+    var tPirate = new PirateCaptain(ATavern.getNextPirateId(), "Capt. Reynolds");
+    tShip.captain = tPirate;
+    tShip.crewcap = 15 + (Math.random() * 22);
+    for( var i = 0; i < tShip.crewcap; i++){
+        var sm = new Pirate(ATavern.getNextPirateId(), "X");
+        sm.setShipId(tShip.id);
+        tShip.crew.push(sm);
+    }
     return tShip;
 }
 
@@ -72,5 +113,6 @@ ATavern.initializeGame = function (){
     ATavern.appendGameLog("Creating 100 cargo ships");
     var tempCaptain = ATavern.makeNewMerchantCaptain("Capt Dull");
     var cargoship = ATavern.makeCargoship(tempCaptain,100,100);
+    var randomPirate = ATavern.makeRandomPirateShip();
     ATavern.appendGameLog("Creating 20 pirate ships");
 }
