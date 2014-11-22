@@ -5,19 +5,20 @@ function Ship(id, name) {
     this.name = name;
     this.heading = 0;
     this.speed = 0;
+    this.crewcap = 0
     this.cargoworth = 0;
     this.loot = [];
     this.captain = {}
 }
 
-function Seafarer(id, name, shipid) {
+function Seafarer(id, name) {
     this.id = id;
     this.name = name;
-    this.ship = shipid;
+    this.ship = 0;
     this.maxhp = 15;
 }
 
-function Pirate(id, name, shipid) {
+function Pirate(id, name) {
     Seafarer.call(this, id, name, shipid);
     this.money = 0;
     this.thirst = 0;
@@ -27,7 +28,7 @@ function Pirate(id, name, shipid) {
 
 Pirate.prototype = Object.create(Seafarer.prototype);
 
-function PirateCaptain(id, name, shipid) {
+function PirateCaptain(id, name) {
     Pirate.call(this,id, name, shipid);
     this.maxhp = 25 + (Math.random() * 25);
     this.attackstr = 2 + (Math.random() * 15);
@@ -39,14 +40,18 @@ PirateCaptain.prototype = Object.create(Pirate.prototype);
 ATavern.activeCargoShips = [];
 
 ATavern.nextCaptId = 1
-ATavern.makeNewMerchantCaptain = function(name, loot){
-    var tCapt = new Seafarer(2, "Capt. Dull", id);
+ATavern.makeNewMerchantCaptain = function(name){
+    var tCapt = new Seafarer(ATavern.nextCaptId ,name);
+    ATavern.nextCaptId++;
+    tCapt.maxhp = 25 + (Math.random() * 25);
+    return tCapt;
 }
 
-ATavern.makeCargoship = function(captain, worth) {
-    var tShip = new Ship(id, "Freighter One");
-    
-    tShip.captain = tCapt;
+ATavern.nextShipId = 1
+ATavern.makeCargoship = function(captain, worth, loot) {
+    var tShip = new Ship(ATavern.nextShipId, "Freighter One");
+    ATavern.nextShipId++;
+    tShip.captain = captain;
     tShip.worth = worth;
     tShip.loot.push(loot);
     return tShip;
@@ -65,6 +70,7 @@ ATavern.appendGameLog = function(str){
 ATavern.initializeGame = function (){
     $( ".GameLog" ).append("WELCOME TO YOUR NEW TAVERN'S DEBUG LOG - ARRRR\n");
     ATavern.appendGameLog("Creating 100 cargo ships");
-    var cargoship = ATavern.makeCargoship(1,1);
+    var tempCaptain = ATavern.makeNewMerchantCaptain("Capt Dull");
+    var cargoship = ATavern.makeCargoship(tempCaptain,100,100);
     ATavern.appendGameLog("Creating 20 pirate ships");
 }
