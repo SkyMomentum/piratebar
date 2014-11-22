@@ -37,8 +37,7 @@
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
-
+Icon
 # Thumbnails
 ._*
 
@@ -65,7 +64,5 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
-# local jquery
-jquery-2.1.1.js
-# and graphical assets
+#graphical assets
 art/
