@@ -12,17 +12,20 @@ function Ship(id, name) {
     this.crew = [];
 }
 
+// A generic sea goer, prey. Their captain is one of them but a tiny bit bigger.
 function Seafarer(id, name) {
     this.id = id;
     this.name = name;
     this.ship = 0;
     this.maxhp = 15;
 }
+// utility for partial movement to ship. Sets their ship id.
 Seafarer.prototype.setShipId = function (id) {
     this.ship = id;
     return id;
 }
 
+// Has more teeth than other sea goers.
 function Pirate(id, name) {
     Seafarer.call(this, id, name);
     this.money = 0;
@@ -34,6 +37,7 @@ function Pirate(id, name) {
 
 Pirate.prototype = Object.create(Seafarer.prototype);
 
+// The most teeth.
 function PirateCaptain(id, name) {
     Pirate.call(this,id, name);
     this.maxhp = 25 + (Math.random() * 25);
@@ -44,7 +48,9 @@ PirateCaptain.prototype = Object.create(Pirate.prototype);
 
 
 //ATavern.activeCargoShips = [];
-//TODO make this part of the objects.
+//TODO make this part of the objects.?
+
+// Next three functions keep track of issued id numbers for the entities by type.
 ATavern.nextPirateId = 1;
 ATavern.getNextPirateId = function () {
     ATavern.nextPirateId++;
@@ -63,12 +69,15 @@ ATavern.getNextShipId = function () {
     return ATavern.nextShipId;
 }
 
+
+// Promote a seafarer to 'captain' by giving them a little more hp
 ATavern.makeNewMerchantCaptain = function(name){
     var tCapt = new Seafarer(ATavern.getNextSeafarerId(),name);
     tCapt.maxhp = 25 + (Math.random() * 25);
     return tCapt;
 }
 
+// Create a merchant cargo ship of a certain worth with some list of loot (or not)
 ATavern.makeCargoship = function(captain, worth, loot) {
     var tShip = new Ship(ATavern.getNextShipId(), "Freighter One");
     captain.setShipId(tShip.id);
@@ -85,6 +94,7 @@ ATavern.makeCargoship = function(captain, worth, loot) {
 }
 
 
+// Make a pirate ship to go out and feed.
 ATavern.makeRandomPirateShip = function() {
     var tShip = new Ship(ATavern.getNextShipId(), "Serenity");
     var tPirate = new PirateCaptain(ATavern.getNextPirateId(), "Capt. Reynolds");
@@ -98,6 +108,8 @@ ATavern.makeRandomPirateShip = function() {
     return tShip;
 }
 
+//Utility display function
+
 ATavern.appendGameLog = function(str){
     var nline = $("<div></div>", {
       "text": str,
@@ -108,6 +120,7 @@ ATavern.appendGameLog = function(str){
 }
 
 
+// Part test bed at the moment. Game loop to be tick sequence based on the notes below.
 ATavern.initializeGame = function (){
     $( ".GameLog" ).append("WELCOME TO YOUR NEW TAVERN'S DEBUG LOG - ARRRR\n");
     ATavern.appendGameLog("Creating 100 cargo ships");
