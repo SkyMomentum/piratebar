@@ -115,4 +115,12 @@ ATavern.initializeGame = function (){
     var cargoship = ATavern.makeCargoship(tempCaptain,100,100);
     var randomPirate = ATavern.makeRandomPirateShip();
     ATavern.appendGameLog("Creating 20 pirate ships");
+    //move these to game loop
+    //  
+    //  draw one pirate, one cargo, make em fight
+    //  triangle wins, triangleman
+    //  when a pirate has fulfilled greed it makes its way to your tavern.
+    //  when it arrives it tries to sell loot,
+    //      it's crew take their share and buy beer/cause trouble 
+
 }
