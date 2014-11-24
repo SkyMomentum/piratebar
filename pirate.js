@@ -1,3 +1,7 @@
+/*
+    Author: Ryan Drew
+    Creation: 11/21/14
+*/
 var ATavern = ATavern || {};
 
 function Ship(id, name) {
@@ -5,6 +9,7 @@ function Ship(id, name) {
     this.name = name;
     this.heading = 0;
     this.speed = 0;
+    this.distance = 0;
     this.crewcap = 0
     this.cargoworth = 0;
     this.loot = [];
@@ -16,7 +21,7 @@ function Ship(id, name) {
 function Seafarer(id, name) {
     this.id = id;
     this.name = name;
-    this.ship = 0;
+    this.ship = -1;
     this.maxhp = 15;
 }
 // utility for partial movement to ship. Sets their ship id.
@@ -119,6 +124,17 @@ ATavern.appendGameLog = function(str){
     $( ".GameLog" ).append(nline);
 }
 
+ATavern.cargoShips = [];
+ATavern.pirateShips = [];
+
+ATavern.tickGameState = function () {
+    //  
+    //  draw one pirate, one cargo, make em fight
+    //  triangle wins, triangleman
+    //  when a pirate has fulfilled greed it makes its way to your tavern.
+    //  when it arrives it tries to sell loot,
+    //      it's crew take their share and buy beer/cause trouble 
+}
 
 // Part test bed at the moment. Game loop to be tick sequence based on the notes below.
 ATavern.initializeGame = function (){
@@ -128,12 +144,5 @@ ATavern.initializeGame = function (){
     var cargoship = ATavern.makeCargoship(tempCaptain,100,100);
     var randomPirate = ATavern.makeRandomPirateShip();
     ATavern.appendGameLog("Creating 20 pirate ships");
-    //move these to game loop
-    //  
-    //  draw one pirate, one cargo, make em fight
-    //  triangle wins, triangleman
-    //  when a pirate has fulfilled greed it makes its way to your tavern.
-    //  when it arrives it tries to sell loot,
-    //      it's crew take their share and buy beer/cause trouble 
 
 }
